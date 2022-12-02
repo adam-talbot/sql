@@ -49,3 +49,8 @@ SELECT DISTINCT japan_investments.company_name,
  WHERE japan_investments.investor_country_code = 'JPN'
  ORDER BY 1
  - Need to play with some examples to wrap my head around this a bit more
+
+ Different rank functions for window functions
+ - rank() - will just rank and will skip numbers for ties (e.g. 1,2,2,4)
+ - dense_rank() - will rank and not skip numbers for ties (e.g. 1,2,2,3)
+ - row_number() - will just count up even for ties (e.g. 1,2,3,4)
