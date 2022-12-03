@@ -65,3 +65,12 @@ from ordered_sales
 where order_num = 1
 group by customer_id, product_name
 ; -- looks a little cleaner and more readable
+
+-- 4. What is the most purchased item on the menu and how many times was it purchased by all customers?
+select product_name, count(*)
+from dannys_diner.sales
+join dannys_diner.menu using(product_id)
+group by product_name
+order by 2 desc
+limit 1;
+
