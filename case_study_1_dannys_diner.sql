@@ -74,3 +74,5 @@ group by product_name
 order by 2 desc
 limit 1;
 
+-- 5. Which item was the most popular for each customer?
+
