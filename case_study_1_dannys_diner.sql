@@ -75,4 +75,16 @@ order by 2 desc
 limit 1;
 
 -- 5. Which item was the most popular for each customer?
-
+-- window function with group by to get rank and then select top for each customer
+select customer_id, product_name, order_count
+from (
+  select customer_id, product_name, count(product_id) as order_count,
+      DENSE_RANK() OVER(PARTITION BY customer_id ORDER BY count(product_name) desc) AS rank
+  from dannys_diner.sales
+  join dannys_diner.menu using(product_id)
+  group by customer_id, product_name
+  order by customer_id, order_count desc
+  ) as t1
+where rank = 1;
+-- need to understand group by used with window function better, don't understand why this window function can't be used with all columns and no other aggregations
+-- could also use cte instead of subquery here
