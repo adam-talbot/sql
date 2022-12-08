@@ -54,3 +54,5 @@ SELECT DISTINCT japan_investments.company_name,
  - rank() - will just rank and will skip numbers for ties (e.g. 1,2,2,4)
  - dense_rank() - will rank and not skip numbers for ties (e.g. 1,2,2,3)
  - row_number() - will just count up even for ties (e.g. 1,2,3,4)
+
+ Using min() in window function is same as using order by and then taking first value. Also same as ranking and getting first row

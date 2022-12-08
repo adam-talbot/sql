@@ -88,3 +88,59 @@ from (
 where rank = 1;
 -- need to understand group by used with window function better, don't understand why this window function can't be used with all columns and no other aggregations
 -- could also use cte instead of subquery here
+
+-- 6. Which item was purchased first by the customer after they became a member?
+-- group by customer and item, min date --> doesn't work because different item customer combos will all show up, we just want one item
+-- window function, partition by customer, min date --> works
+-- window function, partition by customer, row number, order by date, first row --> works
+-- window function, partition by customer, order by date, take first --> works
+
+-- subquery
+select customer_id, product_name, order_date, join_date
+from (
+  select customer_id, product_name, order_date, join_date,
+      DENSE_RANK() OVER(PARTITION BY customer_id ORDER BY order_date) AS rank
+  from dannys_diner.sales
+  join dannys_diner.menu using(product_id)
+  join dannys_diner.members using(customer_id)
+  where order_date >= join_date
+  ) as t1
+where rank = 1;
+  
+  -- cte
+with first_order as (
+  select customer_id, product_name, order_date, join_date,
+  	DENSE_RANK() OVER(PARTITION BY customer_id ORDER BY order_date) AS rank
+  from dannys_diner.sales
+  join dannys_diner.menu using(product_id)
+  join dannys_diner.members using(customer_id)
+  where order_date >= join_date
+  )
+select customer_id, product_name, order_date, join_date
+from first_order
+where rank =1;
+
+-- using min() in window function
+select customer_id, product_name, order_date, join_date
+from (
+  select customer_id, product_name, order_date, join_date,
+      min(order_date) OVER(PARTITION BY customer_id) AS min_date
+  from dannys_diner.sales
+  join dannys_diner.menu using(product_id)
+  join dannys_diner.members using(customer_id)
+  where order_date >= join_date
+  ) as t1
+where order_date = min_date;
+
+-- try using first()
+with first_order as (
+  select customer_id, product_name, order_date, join_date,
+      first_value(order_date) OVER(PARTITION BY customer_id ORDER BY order_date) AS first_date
+  from dannys_diner.sales
+  join dannys_diner.menu using(product_id)
+  join dannys_diner.members using(customer_id)
+  where order_date >= join_date
+  )
+select customer_id, product_name, order_date, join_date
+from first_order
+where first_date = order_date;
