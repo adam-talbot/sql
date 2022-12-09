@@ -144,3 +144,17 @@ with first_order as (
 select customer_id, product_name, order_date, join_date
 from first_order
 where first_date = order_date;
+
+-- 7. Which item was purchased just before the customer became a member?
+-- same as above just change the where condition
+with previous_order as (
+  select customer_id, product_name, order_date, join_date,
+      first_value(order_date) OVER(PARTITION BY customer_id ORDER BY order_date desc) AS previous_date
+  from dannys_diner.sales
+  join dannys_diner.menu using(product_id)
+  join dannys_diner.members using(customer_id)
+  where order_date < join_date
+  )
+select customer_id, product_name, order_date, join_date
+from previous_order
+where previous_date = order_date;
