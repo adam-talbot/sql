@@ -158,3 +158,14 @@ with previous_order as (
 select customer_id, product_name, order_date, join_date
 from previous_order
 where previous_date = order_date;
+
+-- 8. What is the total items and amount spent for each member before they became a member?
+-- group by with where clause
+select
+	customer_id, count(distinct product_name) as total_items, sum(price) as total_amount_spent -- could also omit distinct here to get total count of items instead of distinct items
+from dannys_diner.sales
+join dannys_diner.menu using(product_id)
+join dannys_diner.members using(customer_id)
+where order_date < join_date 
+group by customer_id
+order by customer_id;
