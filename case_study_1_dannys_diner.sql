@@ -169,3 +169,15 @@ join dannys_diner.members using(customer_id)
 where order_date < join_date 
 group by customer_id
 order by customer_id;
+
+-- Bonus question I created myself to try something out from a technical interview that I just had
+-- Which person/people purchased the most items?
+select customer_id
+from (select customer_id, order_count, max(order_count) OVER() AS max_order_count
+	  from (select customer_id, count(product_id) as order_count
+			from dannys_diner.sales
+			group by customer_id) as t1) as t2
+where order_count = max_order_count
+order by 1;
+-- this question is much trickier than I thought due to order of execution
+-- it is poassible to do window function without any partition and that is useful here since you can do an aggregation without grouping by anything
