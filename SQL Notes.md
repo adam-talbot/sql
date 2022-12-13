@@ -56,3 +56,6 @@ SELECT DISTINCT japan_investments.company_name,
  - row_number() - will just count up even for ties (e.g. 1,2,3,4)
 
  Using min() in window function is same as using order by and then taking first value. Also same as ranking and getting first row
+
+ Leaving the over() clause empty on a window function just takes an aggregation over the whole dataset
+ e.g. max(order_count) OVER() AS max_order_count --> max order_count value for all rows will be the value for this column for all rows
