@@ -181,3 +181,16 @@ where order_count = max_order_count
 order by 1;
 -- this question is much trickier than I thought due to order of execution
 -- it is poassible to do window function without any partition and that is useful here since you can do an aggregation without grouping by anything
+
+-- 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
+-- case statement, add new column with the conditions above (points) and the group by customer and get sum
+with points_cte as (
+  select 
+  	*,
+    case when product_name = 'sushi' then price * 20 else price * 10 end as points
+  from dannys_diner.sales
+  join dannys_diner.menu using(product_id))
+select customer_id, sum(points) as total_points
+from points_cte
+group by 1
+order by 1;
