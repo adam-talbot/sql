@@ -194,3 +194,28 @@ select customer_id, sum(points) as total_points
 from points_cte
 group by 1
 order by 1;
+
+-- 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi
+-- - how many points do customer A and B have at the end of January?
+-- create date diff column and then use case when to get point column (not available in postressql)
+-- add 6 days to join date and then look for values between those two dates
+-- filter out orders after January
+with prom_cte as (
+  select
+      *,
+      join_date + INTERVAL '6 days' as last_day
+  from dannys_diner.sales
+  join dannys_diner.menu using(product_id)
+  join dannys_diner.members using(customer_id)
+  where order_date < '2021-02-01')
+select
+	customer_id,
+    sum(case
+        	when order_date between join_date and last_day then price * 20
+        	when product_name = 'sushi' then price * 20
+        	else price * 10
+        end) as point_total
+from prom_cte
+group by 1
+order by 1;
+
