@@ -219,3 +219,14 @@ from prom_cte
 group by 1
 order by 1;
 
+-- Join All The Things
+select
+	customer_id,
+  order_date,
+  product_name,
+  price,
+  case when join_date <= order_date then 'Y' else 'N' end as member
+from dannys_diner.sales
+left join dannys_diner.menu using(product_id)
+left join dannys_diner.members using(customer_id)
+order by 1, 2;
