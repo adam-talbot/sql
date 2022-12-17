@@ -241,11 +241,11 @@ with member_cte as (
     product_name,
     price,
     case when join_date <= order_date then 'Y' else 'N' end as member
-from dannys_diner.sales
-left join dannys_diner.menu using(product_id)
-left join dannys_diner.members using(customer_id)
-order by 1, 2)
+  from dannys_diner.sales
+  left join dannys_diner.menu using(product_id)
+  left join dannys_diner.members using(customer_id)
+  order by 1, 2)
 select
 	*, 
-    case when member = 'Y' then dense_rank() over(partition by customer_id order by order_date) end as ranking
+  case when member = 'Y' then rank() over(partition by customer_id, member order by order_date) else null end as ranking
 from member_cte;
