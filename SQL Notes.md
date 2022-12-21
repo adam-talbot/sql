@@ -62,3 +62,5 @@ SELECT DISTINCT japan_investments.company_name,
 
  DDL syntax is different for different SQL dialects
  - for postgresql all column names are wrapped in double quotes, in mysql they aren't
+
+ Information schema contains metadata for all tables in schema (e.g. column dtypes, table permissions, column permissions, etc.)
