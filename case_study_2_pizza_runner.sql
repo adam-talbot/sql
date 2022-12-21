@@ -234,18 +234,6 @@ VALUES
   (11, 'Tomatoes'),
   (12, 'Tomato Sauce');
 
--- A. Pizza Metrics
--- 1. How many pizzas were ordered?
--- 2. How many unique customer orders were made?
--- 3. How many successful orders were delivered by each runner?
--- 3. How many of each type of pizza was delivered?
--- 5. How many Vegetarian and Meatlovers were ordered by each customer?
--- 6. What was the maximum number of pizzas delivered in a single order?
--- 7. For each customer, how many delivered pizzas had at least 1 change and how many had no changes?
--- 8. How many pizzas were delivered that had both exclusions and extras?
--- 9. What was the total volume of pizzas ordered for each hour of the day?
--- 10. What was the volume of orders for each day of the week?
-
 -- check data types of columns in postgresql
 SELECT
 	*
@@ -318,5 +306,36 @@ FROM
 WHERE
     table_name = 'runner_orders_clean'; -- looks good
 
+-- A. Pizza Metrics
+-- 1. How many pizzas were ordered?
+-- 2. How many unique customer orders were made?
+-- 3. How many successful orders were delivered by each runner?
+-- 4. How many of each type of pizza was delivered?
+-- 5. How many Vegetarian and Meatlovers were ordered by each customer?
+-- 6. What was the maximum number of pizzas delivered in a single order?
+-- 7. For each customer, how many delivered pizzas had at least 1 change and how many had no changes?
+-- 8. How many pizzas were delivered that had both exclusions and extras?
+-- 9. What was the total volume of pizzas ordered for each hour of the day?
+-- 10. What was the volume of orders for each day of the week?
+
 -- 1. How many pizzas were ordered?
 select count(*) as total_orders from customer_orders_clean; -- 14
+
+-- 2. How many unique customer orders were made?
+select count(distinct order_id) from customer_orders_clean; -- 10
+
+-- 3. How many successful orders were delivered by each runner?
+select runner_id, count(distinct order_id)
+from customer_orders_clean
+join runner_orders_clean using(order_id)
+where cancellation is null
+group by runner_id;
+
+-- How many of each type of pizza was delivered?
+select pizza_name, count(*) as total_ordered
+from customer_orders_clean
+join pizza_names using(pizza_id)
+join runner_orders_clean using(order_id)
+where cancellation is null
+group by pizza_name
+order by 2 desc;
