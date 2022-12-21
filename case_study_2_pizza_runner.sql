@@ -246,7 +246,7 @@ VALUES
 -- 9. What was the total volume of pizzas ordered for each hour of the day?
 -- 10. What was the volume of orders for each day of the week?
 
--- check data types of columns
+-- check data types of columns in postgresql
 SELECT
 	*
 FROM
@@ -305,9 +305,18 @@ create table runner_orders_clean as (
   		end as cancellation
   from runner_orders
 );
-alter table runner_orders_clean modify column pickup_time timestamp;
-alter table runner_orders_clean modify column distance float;
-alter table runner_orders_clean modify column duration integer;
+alter table runner_orders_clean 
+modify column pickup_time timestamp,
+modify column distance float,
+modify column duration integer;
+
+-- check column dtypes in mysql
+SELECT
+	*
+FROM
+    information_schema.columns
+WHERE
+    table_name = 'runner_orders_clean'; -- looks good
 
 -- 1. How many pizzas were ordered?
 select count(*) as total_orders from customer_orders_clean; -- 14
