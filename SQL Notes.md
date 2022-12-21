@@ -59,3 +59,6 @@ SELECT DISTINCT japan_investments.company_name,
 
  Leaving the over() clause empty on a window function just takes an aggregation over the whole dataset
  e.g. max(order_count) OVER() AS max_order_count --> max order_count value for all rows will be the value for this column for all rows
+
+ DDL syntax is different for different SQL dialects
+ - for postgresql all column names are wrapped in double quotes, in mysql they aren't
