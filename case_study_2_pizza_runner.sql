@@ -331,7 +331,7 @@ join runner_orders_clean using(order_id)
 where cancellation is null
 group by runner_id;
 
--- How many of each type of pizza was delivered?
+-- 4. How many of each type of pizza was delivered?
 select pizza_name, count(*) as total_ordered
 from customer_orders_clean
 join pizza_names using(pizza_id)
@@ -339,3 +339,10 @@ join runner_orders_clean using(order_id)
 where cancellation is null
 group by pizza_name
 order by 2 desc;
+
+-- 5. How many Vegetarian and Meatlovers were ordered by each customer?
+select customer_id, pizza_name, count(*) as pizza_name_count
+from customer_orders_clean
+join pizza_names using(pizza_id)
+group by customer_id, pizza_name
+order by 1;
