@@ -346,3 +346,12 @@ from customer_orders_clean
 join pizza_names using(pizza_id)
 group by customer_id, pizza_name
 order by 1;
+
+-- 6. What was the maximum number of pizzas delivered in a single order?
+select order_id, count(*) as total_pizzas_delivered
+from customer_orders_clean
+join runner_orders_clean using(order_id)
+where cancellation is null
+group by order_id
+order by 2 desc
+limit 1;
