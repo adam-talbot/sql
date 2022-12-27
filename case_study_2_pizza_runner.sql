@@ -119,7 +119,10 @@ VALUES
   (10, 'Salami'),
   (11, 'Tomatoes'),
   (12, 'Tomato Sauce');
-  
+
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+
 -- DDL is MySQL
 DROP TABLE IF EXISTS runners;
 CREATE TABLE runners (
@@ -289,7 +292,7 @@ create table runner_orders_clean as (
   		when cancellation like 'null' then null
   		when cancellation like '' then null
   		when cancellation like ' ' then null
-        else cancellation
+      else cancellation
   		end as cancellation
   from runner_orders
 );
@@ -297,6 +300,9 @@ alter table runner_orders_clean
 modify column pickup_time timestamp,
 modify column distance float,
 modify column duration integer;
+
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
 
 -- check column dtypes in mysql
 SELECT
@@ -355,3 +361,30 @@ where cancellation is null
 group by order_id
 order by 2 desc
 limit 1;
+
+-- 7. For each customer, how many delivered pizzas had at least 1 change and how many had no changes?
+with change_table as (
+  select 
+    *,
+    case 
+      when extras is not null then 'Y'
+      when exclusions is not null then 'Y' 
+      else 'N' 
+      end as order_change
+  from customer_orders_clean
+  join runner_orders_clean using(order_id)
+  where cancellation is null)
+select customer_id, order_change, count(*) as order_count
+from change_table
+group by customer_id, order_change
+order by customer_id;
+
+-- alternate method
+select 
+  customer_id,
+  sum(case when (exclusions is not null or extras is not null) then 1 else 0 end) as at_least_one_change,
+  sum(case when (exclusions is null and extras is null) then 1 else 0 end) as no_change
+from customer_orders_clean
+join runner_orders_clean using(order_id)
+where cancellation is null
+group by customer_id;
