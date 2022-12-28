@@ -388,3 +388,18 @@ from customer_orders_clean
 join runner_orders_clean using(order_id)
 where cancellation is null
 group by customer_id;
+
+-- 8. How many pizzas were delivered that had both exclusions and extras?
+with both_table as (
+  select 
+    *,
+    case 
+	  when exclusions is not null and extras is not null then 'Y'
+      else 'N' 
+      end as both_excl_extra
+  from customer_orders_clean
+  join runner_orders_clean using(order_id)
+  where cancellation is null)
+select count(*) as pizzas_delivered_with_excl_and_extra
+from both_table
+where both_excl_extra = 'Y';
