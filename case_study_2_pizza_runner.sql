@@ -403,3 +403,11 @@ with both_table as (
 select count(*) as pizzas_delivered_with_excl_and_extra
 from both_table
 where both_excl_extra = 'Y';
+
+-- 9. What was the total volume of pizzas ordered for each hour of the day?
+select 
+  	hour(order_time) as hour,
+    count(order_id) as order_volume
+from customer_orders_clean
+group by 1
+order by 1;

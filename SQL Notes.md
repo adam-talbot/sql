@@ -64,3 +64,5 @@ SELECT DISTINCT japan_investments.company_name,
  - for postgresql all column names are wrapped in double quotes, in mysql they aren't
 
  Information schema contains metadata for all tables in schema (e.g. column dtypes, table permissions, column permissions, etc.)
+
+ hour() function in mySQL will pull out the hour value from a timestamp column
