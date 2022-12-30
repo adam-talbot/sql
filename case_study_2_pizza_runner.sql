@@ -411,3 +411,18 @@ select
 from customer_orders_clean
 group by 1
 order by 1;
+
+-- 10. What was the volume of orders for each day of the week?
+select 
+  	dayname(order_time) as hour, -- name of day
+    count(order_id) as order_volume
+from customer_orders_clean
+group by 1
+order by 2 desc;
+
+select 
+  	dayofweek(order_time) as hour, -- day number
+    count(order_id) as order_volume
+from customer_orders_clean
+group by 1
+order by 1;
