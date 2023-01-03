@@ -66,3 +66,5 @@ SELECT DISTINCT japan_investments.company_name,
  Information schema contains metadata for all tables in schema (e.g. column dtypes, table permissions, column permissions, etc.)
 
  hour() function in mySQL will pull out the hour value from a timestamp column
+
+ To calculate the difference between the timestamps in MySQL, use the TIMESTAMPDIFF(unit, start, end) function. The unit argument can be MICROSECOND, SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, QUARTER, or YEAR 

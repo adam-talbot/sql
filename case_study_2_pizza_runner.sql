@@ -452,3 +452,13 @@ select
 from runners
 group by 1
 order by 1;
+
+-- 2. What was the average time in minutes it took for each runner to arrive at the Pizza Runner HQ to pickup the order?
+select 
+	runner_id,
+  avg(TIMESTAMPDIFF(minute, order_time, pickup_time)) as avg_arrival_time
+from customer_orders_clean
+join runner_orders_clean using(order_id)
+where cancellation is null
+group by 1
+order by 1;
