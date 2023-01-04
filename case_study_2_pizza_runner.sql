@@ -462,3 +462,22 @@ join runner_orders_clean using(order_id)
 where cancellation is null
 group by 1
 order by 1;
+
+-- 3. Is there any relationship between the number of pizzas and how long the order takes to prepare?
+with pizza_count_cte as(
+  select 
+    order_id,
+    count(*) as pizza_count,
+    avg(TIMESTAMPDIFF(minute, order_time, pickup_time)) as avg_arrival_time
+  from customer_orders_clean
+  join runner_orders_clean using(order_id)
+  where cancellation is null
+  group by 1
+  order by 1)
+select
+	pizza_count,
+  avg(avg_arrival_time)
+from pizza_count_cte
+group by 1
+order by 1;
+-- This should work, might be a more elegant way to do this one though
