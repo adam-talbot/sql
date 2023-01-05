@@ -481,3 +481,13 @@ from pizza_count_cte
 group by 1
 order by 1;
 -- This should work, might be a more elegant way to do this one though
+
+-- 4. What was the average distance travelled for each customer?
+select 
+ customer_id,
+ round(avg(distance), 2) as avg_distance_travelled
+from customer_orders_clean
+join runner_orders_clean using(order_id)
+where cancellation is null
+group by 1
+order by 1;
