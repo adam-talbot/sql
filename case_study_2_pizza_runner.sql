@@ -491,3 +491,23 @@ join runner_orders_clean using(order_id)
 where cancellation is null
 group by 1
 order by 1;
+
+-- 5. What was the difference between the longest and shortest delivery times for all orders?
+-- Assuming this question is asking how long it takes to get from HQ to customer location
+select 
+	max(duration) - min(duration) as diff_max_min_duration
+from customer_orders_clean
+join runner_orders_clean using(order_id)
+where cancellation is null;
+
+-- If we are taking into account the time from order to pickup at HQ as well as time from HQ to customer location
+with total_delivery_time_cte as (
+  select 
+      *,
+      duration + TIMESTAMPDIFF(minute, order_time, pickup_time) as total_delivery_time
+  from customer_orders_clean
+  join runner_orders_clean using(order_id)
+  where cancellation is null)
+select
+	max(total_delivery_time) - min(total_delivery_time) as diff_max_min_delivery_time
+from total_delivery_time_cte;
