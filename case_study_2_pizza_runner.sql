@@ -511,3 +511,45 @@ with total_delivery_time_cte as (
 select
 	max(total_delivery_time) - min(total_delivery_time) as diff_max_min_delivery_time
 from total_delivery_time_cte;
+
+-- 6. What was the average speed for each runner for each delivery and do you notice any trend for these values?
+-- Convert km to miles in distance column
+-- Convert minutes to hours in the duration column
+-- Calculate mph for each delivery
+-- Calculate average mph for each runner
+
+-- Incorrect, join is unnecessary, creates duplicate avg_mph values that change the average
+select 
+	runner_id,
+ 	avg((distance * 0.621371) / (duration / 60)) as avg_mph
+from customer_orders_clean
+join runner_orders_clean using(order_id)
+where cancellation is null
+group by 1
+order by 1;
+
+-- The query resolves the issue with first attempt and is technically correct but it is completely unnecessary to do the join and then take the row number, don't need the join at all
+with order_rank_cte as
+(select 
+	*,
+  (distance * 0.621371) / (duration / 60) as mph,
+  row_number() OVER(PARTITION BY order_id) AS row_num
+from customer_orders_clean
+join runner_orders_clean using(order_id)
+where cancellation is null)
+select
+	runner_id,
+  avg(mph) as avg_mph
+from order_rank_cte
+where row_num = 1
+group by 1
+order by 1;
+
+-- Correct and simplest query
+select
+	runner_id,
+  avg((distance * 0.621371) / (duration / 60)) as avg_mph
+from runner_orders_clean
+where cancellation is null
+group by 1
+order by 1;
