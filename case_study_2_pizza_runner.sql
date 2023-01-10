@@ -553,3 +553,23 @@ from runner_orders_clean
 where cancellation is null
 group by 1
 order by 1;
+
+-- 7. What is the successful delivery percentage for each runner?
+-- this gets counts for each case but not percentages
+with cancellation_cte as (
+  select 
+	*,
+  case when cancellation is null then 'N' else 'Y' end as is_cancelled
+from runner_orders_clean)
+select runner_id, is_cancelled, count(order_id)
+from cancellation_cte
+group by 1, 2
+order by 1;
+
+-- this gets the percentages we are looking for
+select
+	runner_id,
+  round(sum(case when cancellation is null then 1 else 0 end) / count(*) * 100, 0) as success_percentage
+from runner_orders_clean
+group by 1
+order by 1;
