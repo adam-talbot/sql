@@ -616,7 +616,7 @@ VALUES
 
 select
 	pizza_name, 
-  group_concat(topping_name)
+  group_concat(topping_name) as standard_toppings
 from pizza_recipes_reform as r
 join pizza_toppings as t on r.toppings = t.topping_id
 join pizza_names using(pizza_id)
