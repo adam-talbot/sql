@@ -590,3 +590,35 @@ order by 1;
 -- 1. What are the standard ingredients for each pizza?
 -- Need to explode the list of ingredients from single value to rows so I can join with other table to get topping_name
 -- Can't really find a way to do this in mySQL (there is no good equivalent of the split() function in Python)
+-- reformat table with ddl and use group_concat() function
+DROP TABLE IF EXISTS pizza_recipes_reform;
+CREATE TABLE pizza_recipes_reform (
+  pizza_id INTEGER,
+  toppings TEXT
+);
+INSERT INTO pizza_recipes_reform
+  (pizza_id, toppings)
+VALUES
+  (1, 1),
+  (1, 2),
+  (1, 3),
+  (1, 4),
+  (1, 5),
+  (1, 6),
+  (1, 8),
+  (1, 10),
+  (2, 4),
+  (2, 6),
+  (2, 7),
+  (2, 9),
+  (2, 11),
+  (2, 12);
+
+select
+	pizza_name, 
+  group_concat(topping_name)
+from pizza_recipes_reform as r
+join pizza_toppings as t on r.toppings = t.topping_id
+join pizza_names using(pizza_id)
+group by 1
+order by 1;
